@@ -8,6 +8,9 @@
 #include "connectfour.h"
 
 
+using namespace std;
+
+
 class CFServer{
 
     private:
@@ -123,6 +126,26 @@ class CFServer{
 
         }
 
+        // Wrapper method for sending a message to the black client.
+        int sendBlack(string msg){
+            int msglen = msg.length();
+            char* c_msg = (char*)msg.c_str();
+            if(write(blackSocket, c_msg, msglen) < 0){
+                return FAILURE;
+            }
+            return SUCCESS;
+        }
+
+        // Wrapper method for sending a message to the red client.
+        int sendRed(string msg){
+            int msglen = msg.length();
+            char* c_msg = (char*)msg.c_str();
+            if(write(redSocket, c_msg, msglen) < 0){
+                return FAILURE;
+            }
+            return SUCCESS;
+        }
+
         // Cleans up all networking-related resources.
         int cleanup(){
             if(serverSocket > 0){
@@ -140,13 +163,37 @@ class CFServer{
 };
 
 int main(){
+
+    /* PART I: CLIENT-SERVER PREPARATIONS */
+
     CFServer s;
-    s.initialize();
-    s.acceptBlackClient();
-    s.acceptRedClient();
-    char msg[6];
-    read(s.getBlackSocket(), msg, 6);
-    std::cout << msg << std::endl;
+
+    // Initialize
+    cout << "Initializing server..." << endl;
+    if(s.initialize() == FAILURE){
+        cout << "Couldn't initialize server, aborting." << endl;
+        exit(1);
+    }
+
+    // Receive black client and notify the client of its color
+    cout << "Waiting for first client to connect..." << endl;
+    if(s.acceptBlackClient() == FAILURE){
+        cout << "Error accepting first client, aborting." << endl;
+        exit(1);
+    }
+    s.sendBlack("black");
+
+    // Receive red client and notify the client of its color
+    // Also notify the black client that the red client connected
+    cout << "Waiting for second client to connect..." << endl;
+    if(s.acceptRedClient() == FAILURE){
+        cout << "Error accepting second client, aborting." << endl;
+        exit(1);
+    }
+    s.sendRed("red");
+    s.sendBlack("ready");
+
+    cout << "Starting the game now." << endl;
     s.cleanup();
     return 0;
 }
