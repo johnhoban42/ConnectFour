@@ -32,7 +32,32 @@ int main(){
     cout << "Both players are ready, let's start the game!" << endl;
 
     /* PART II: GAME SETUP */
-    
+
+    c.resetGameState();
+
+    /* PART III: GAMEPLAY */
+
+    // Let's get started
+    string start = c.readMsg(5);
+    if(start != "start"){
+        c.cleanup();
+        return 0;
+    }
+
+    // Main game loop
+    // Alternate between taking a turn and waiting for the other client
+    bool myTurn = (c.getColor() == BLACK) ? true : false;
+    bool done = false;
+    while(!done){
+
+        if(myTurn){
+            c.takeTurn();
+            myTurn = false;
+        }else{
+            myTurn = true;
+        }
+
+    }
 
     
     c.cleanup();

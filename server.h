@@ -44,6 +44,12 @@ class CFServer{
         */
         int readGameState(int client);
 
+        /* Send a new game state to a client.
+         * Networking protocol:
+         * <row><column> (2 chars representing the newly filled cell)
+        */
+        int sendGameState(int client, int row, int col);
+
         /* Check for a winning game state about the most recent filled cell.
          * Returns RED or BLACK on winner, -1 otherwise.
          */

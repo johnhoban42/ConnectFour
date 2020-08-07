@@ -44,6 +44,8 @@ int main(){
     s.sendBlack("start");
     s.sendRed("start");
 
+    /* PART III: GAMEPLAY */
+
     s.cleanup();
     return 0;
 }

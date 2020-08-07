@@ -83,9 +83,9 @@ int CFServer::acceptRedClient(){
 }
 
 /* Read in the new game state from a client and update it on the server.
-    * Networking protocol:
-    * <row><column> (2 chars representing the newly filled cell)
-*/
+ * Networking protocol:
+ * <row><column> (2 chars representing the newly filled cell)
+ */
 int CFServer::readGameState(int client){
     char newState[2];
     if(read(client, newState, 2) < 0){
@@ -103,6 +103,22 @@ int CFServer::readGameState(int client){
 
     return SUCCESS;
 
+}
+
+/* Send a new game state to a client.
+ * Networking protocol:
+ * <row><column> (2 chars representing the newly filled cell)
+ */
+int CFServer::sendGameState(int client, int row, int col){
+    stringstream ss;
+    ss << row << col;
+    string s = ss.str();
+    if(client == blackSocket){
+        sendBlack(s);
+    }else{
+        sendRed(s);
+    }
+    return SUCCESS;
 }
 
 /* Check for a winning game state about the most recent filled cell.

@@ -10,6 +10,7 @@
 #include <netdb.h>
 #include <netinet/in.h>
 #include <iostream>
+#include <sstream>
 
 // Networking
 #define HOST "cs.rutgers.edu"
@@ -22,3 +23,4 @@
 // Game state data
 #define BLACK 1
 #define RED 10
+#define EMPTY 0
